@@ -3,7 +3,6 @@ package com.example.carmodel
 import android.app.Activity
 import android.os.Bundle
 import android.view.View
-import android.view.View.*
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Button
@@ -15,6 +14,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 
 class MainActivity() : Activity() {
+    private var mPresenter: Contract.Presenter? = null
     private var imageView: ImageView? = null
     private var button: Button? = null
     private var textView: TextView? = null
@@ -29,13 +29,14 @@ class MainActivity() : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        mPresenter = Presenter(this)
         imageView = findViewById(R.id.imageView)
         button = findViewById(R.id.button)
         textView = findViewById(R.id.textView)
-        horizontalAnimation = AnimationUtils.loadAnimation(this, R.anim.right);
-        rightDiagonalAnimation = AnimationUtils.loadAnimation(this, R.anim.down);
-        leftDiagonalAnimation = AnimationUtils.loadAnimation(this, R.anim.left_right);
-
+        horizontalAnimation = AnimationUtils.loadAnimation(this, R.anim.right)
+        rightDiagonalAnimation = AnimationUtils.loadAnimation(this, R.anim.down)
+        leftDiagonalAnimation = AnimationUtils.loadAnimation(this, R.anim.left_right)
+        imageView?.setImageResource(R.drawable.auto)
         button?.setOnClickListener(object : View.OnClickListener {
             override fun onClick(arg0: View?) {
                 moving()
@@ -45,40 +46,19 @@ class MainActivity() : Activity() {
 
     fun moving() {
         //слева направо- путь 1
-        horizontalAnimation()
+        mPresenter?.animation(horizontalAnimation, imageView)
         //справа на лево- путь 2
         val text1: Deferred<Unit> = coroutineScope.async {
             workSeconds(2000)
-            rightDiagonalAnimation()
+            mPresenter?.animation(rightDiagonalAnimation, imageView)
         }
         //c лево по диагонали- путь 3
         val text2: Deferred<String> = coroutineScope.async {
             val text = workSeconds(4000)
             textView?.text = text
-            leftDiagonalAnimation()
+            mPresenter?.animation(leftDiagonalAnimation, imageView)
             text
         }
-    }
-
-    fun horizontalAnimation() {
-        with(horizontalAnimation) {
-            this?.setDuration(2000)
-        }
-        with(imageView) { this?.startAnimation(horizontalAnimation) }
-    }
-
-    fun rightDiagonalAnimation() {
-        with(rightDiagonalAnimation) {
-            this?.setDuration(2000)
-        }
-        with(imageView) { this?.startAnimation(rightDiagonalAnimation) }
-    }
-
-    fun leftDiagonalAnimation() {
-        with(leftDiagonalAnimation) {
-            this?.setDuration(2000)
-        }
-        with(imageView) { this?.startAnimation(leftDiagonalAnimation) }
     }
 
     suspend fun workSeconds(milliSeconds: Long): String {
