@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -13,7 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 
-class MainActivity() : AppCompatActivity(), Contract.View {
+class MainActivity() : AppCompatActivity(){
     private lateinit var mPresenter: Contract.Presenter
     private lateinit var imageView: ImageView
     private lateinit var textView: TextView
@@ -28,13 +27,13 @@ class MainActivity() : AppCompatActivity(), Contract.View {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        mPresenter = Presenter(this)
+        mPresenter = Presenter()
         imageView = findViewById(R.id.imageView)
         textView = findViewById(R.id.textView)
         horizontalAnimation = AnimationUtils.loadAnimation(this, R.anim.right)
         rightDiagonalAnimation = AnimationUtils.loadAnimation(this, R.anim.down)
         leftDiagonalAnimation = AnimationUtils.loadAnimation(this, R.anim.left_right)
-
+        show()
         imageView.setOnClickListener(object : View.OnClickListener {
             override fun onClick(arg0: View?) {
                 moving()
@@ -64,7 +63,7 @@ class MainActivity() : AppCompatActivity(), Contract.View {
         return "Finish"
     }
 
-    override fun show(img: ImageView?) {
+    fun show() {
         imageView.setImageResource(R.drawable.auto)
     }
 
