@@ -16,7 +16,6 @@ import kotlinx.coroutines.delay
 class MainActivity() : AppCompatActivity(), Contract.View {
     private lateinit var mPresenter: Contract.Presenter
     private lateinit var imageView: ImageView
-    private lateinit var button: Button
     private lateinit var textView: TextView
     private lateinit var horizontalAnimation: Animation
     private lateinit var rightDiagonalAnimation: Animation
@@ -31,13 +30,12 @@ class MainActivity() : AppCompatActivity(), Contract.View {
 
         mPresenter = Presenter(this)
         imageView = findViewById(R.id.imageView)
-        button = findViewById(R.id.button)
         textView = findViewById(R.id.textView)
         horizontalAnimation = AnimationUtils.loadAnimation(this, R.anim.right)
         rightDiagonalAnimation = AnimationUtils.loadAnimation(this, R.anim.down)
         leftDiagonalAnimation = AnimationUtils.loadAnimation(this, R.anim.left_right)
 
-        button.setOnClickListener(object : View.OnClickListener {
+        imageView.setOnClickListener(object : View.OnClickListener {
             override fun onClick(arg0: View?) {
                 moving()
             }
